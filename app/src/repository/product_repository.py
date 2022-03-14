@@ -4,8 +4,10 @@ from app.src.model.product_entity import ProductEntity, ProductDetailEntity
 
 async def get_product_by_name_like(name: str):
     products = []
-    cursor = product_collection.find({"name":{"$regex": name, "$options": "i"}})
-    async for document in cursor:
+    
+    cursor = product_collection.find({"name":{"$regex": name, "$options": "i"}}) #/.*I.*/i
+    async for  document in cursor:
+
         products.append(ProductEntity(**document))
     return products
 
