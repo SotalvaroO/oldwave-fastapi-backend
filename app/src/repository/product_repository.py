@@ -7,7 +7,7 @@ async def get_product_by_name_like(name: str):
     
     cursor = product_collection.find({"name":{"$regex": name, "$options": "i"}}) #/.*I.*/i
     async for  document in cursor:
-        print(document)
+
         products.append(ProductEntity(**document))
     return products
 
