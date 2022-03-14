@@ -1,5 +1,5 @@
 # image python
-FROM python:3.9
+FROM python:3.8.5-slim-buster
 
 # workspace
 WORKDIR /code
