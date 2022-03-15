@@ -13,6 +13,7 @@ async def get_products_by_name(name: str):
     raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
 
 @route.get('/{code}/detail', response_model=ProductDetailEntity)
+
 async def get_product_detail_by_code(code : str):
     response = await product_service.find_product_by_code(code)
     if response:
