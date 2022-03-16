@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 
 
@@ -19,7 +20,7 @@ class ProductDetailEntity(BaseModel):
     description: str
     brand: str
     city: str
-    images: list
+    images: List[str]
     reseller: str
     price: int
     rating: int
