@@ -16,6 +16,6 @@ def get_product_by_name_like(name: str):
         products.append(ProductEntity(**document))
     return products
 
-async def get_product_detail(code:str):
+def get_product_detail(code:str):
     document = product_collection.find_one({"product_code": code})
     return document
