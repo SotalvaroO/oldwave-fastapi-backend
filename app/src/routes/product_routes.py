@@ -6,7 +6,7 @@ from app.src.model.product_entity import ProductDetailEntity
 route = APIRouter(prefix='/product', tags=['Product'])
 
 @route.get('')
-def get_products_by_name(name: str):
+def get_products_by_name(name: str = ""):
     products = product_service.list_products_by_name_like(name)
     if products:
         return products
