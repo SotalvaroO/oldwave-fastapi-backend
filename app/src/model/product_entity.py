@@ -11,6 +11,7 @@ class ProductEntity(BaseModel):
     price: int
     seller: str   
     rating: int
+    search_quantity: int
     
 
 

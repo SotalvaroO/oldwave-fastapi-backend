@@ -8,6 +8,6 @@ def list_products_by_name_like(name: str):
 
     
 def find_product_by_code(code:str):
-
+    product_repository.update_product_search(code)
     product = product_repository.get_product_detail(code)
     return product
