@@ -7,7 +7,7 @@ from fastapi_pagination import Page, add_pagination, paginate
 
 route = APIRouter(prefix='/product', tags=['Product'])
 
-@route.get('', response_model=Page[ProductEntity])
+@route.get('/', response_model=Page[ProductEntity])
 def get_products_by_name(name: str = ""):
     products = product_service.list_products_by_name_like(name)
     if products:
