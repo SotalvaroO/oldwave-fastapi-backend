@@ -45,6 +45,6 @@ jobs:
         tags: latest
         registry: docker.io
         dockerfile: Dockerfile  
-        buildArgs: mongodb+srv://DirtyDann:Seattle3317@databasecluster.1ry5d.mongodb.net/test
+        buildArgs: MONGO_URL=${{ secrets.MONGO_URL }}
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
