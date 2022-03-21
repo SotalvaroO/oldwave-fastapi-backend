@@ -45,7 +45,6 @@ jobs:
         tags: latest
         registry: docker.io
         dockerfile: Dockerfile  
-        buildArgs:
-        - ${{ secrets.MONGO_URL }}
+        buildArgs: MONGO_URL=${{ secrets.MONGO_URL }}
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
