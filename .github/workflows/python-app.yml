@@ -39,7 +39,7 @@ jobs:
       run: |
         pytest
     - name: Build & push Docker image
-      uses: oldwave-fastapi-backend/docker-build-push@v5
+      uses: mr-smithers-excellent/docker-build-push@v5
       with:
         image: sotalvaroo/oldwave-fastapi-backend
         tags: latest
