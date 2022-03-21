@@ -39,11 +39,12 @@ jobs:
       run: |
         pytest
     - name: Build & push Docker image
-      uses: mr-smithers-excellent/docker-build-push@v5
+      uses: oldwave-fastapi-backend/docker-build-push@v5
       with:
         image: sotalvaroo/oldwave-fastapi-backend
         tags: latest
         registry: docker.io
-        dockerfile: Dockerfile
+        dockerfile: Dockerfile  
+        buildArgs: ${{ secrets.MONGO_URL }}
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}

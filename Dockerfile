@@ -1,6 +1,8 @@
 # image python
 FROM python:3.10.3-slim-buster
 
+ARG MONGO_URL
+ENV MONGO_URL $MONGO_URL
 # workspace
 WORKDIR /code
 
