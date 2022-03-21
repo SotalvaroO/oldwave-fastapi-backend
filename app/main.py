@@ -8,4 +8,5 @@ app.include_router(route,prefix='/api')
 @app.get('/')
 async def home():
     res = RedirectResponse(url='/docs')
+    print(res)
     return res
