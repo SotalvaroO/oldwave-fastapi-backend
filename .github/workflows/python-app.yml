@@ -54,5 +54,5 @@ jobs:
         heroku_api_key:  ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: "oldwave-fastapi-backend"
         heroku_email: "santiago.otalvaroo@udea.edu.co"
-        healthcheck: "https://oldwave-fastapi-backend.herokuapp.com/healthcheck"
+        #healthcheck: "https://oldwave-fastapi-backend.herokuapp.com/healthcheck"
         rollbackonhealthcheckfailed: true
