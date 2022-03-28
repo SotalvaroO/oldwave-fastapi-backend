@@ -50,7 +50,6 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
   Deploy:
-      needs: build
       runs-on: ubuntu-latest
       
       steps:
@@ -66,12 +65,10 @@ jobs:
             ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             
               #Now we have got the access of EC2 and we will start the deploy .
-              cd /home/ubuntu/CounterApp &&
-              git checkout master &&
-              git fetch --all &&
-              git reset --hard origin/master &&
-              git pull origin master &&
-              docker-compose -f docker-compose.prod.yml up -d --build 
+              sudo docker pull sotalvaroo/oldwave-fastapi-backend
+              sudo docker rm -f oldwave-fastapi
+              sudo docker run -d --name oldwave-fastapi -p 80:80 sotalvaroo/oldwave-fastapi-backend
+            '
 
     # - name: Deploy to Heroku
     #   uses: akhileshns/heroku-deploy@v3.12.12
