@@ -48,40 +48,30 @@ jobs:
         buildArgs: MONGO_URL=${{ secrets.MONGO_URL }}
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Docker pull & Run From Hub
-      uses: appleboy/ssh-action@master
-      with:
-        host: ec2-3-84-235-83.compute-1.amazonaws.com
-        username: ubuntu
-        key: "MIIEogIBAAKCAQEAhEmp/x8Mz51j49jquYHVum6n/pWfDeNiq6V1xA4eysjgeSPJ
-              bxn38KY9VhXBKF+rS9ZaO+uHAR84RZuFCpbXxolQjYZrHyCkU3VFIyeklTH4KWoh
-              w5SjH+A7huG+/o6yvcZUcEy+qeaWbfnTEQ/ey26nSzxXMvxjyVMGJuRTEBcks6hP
-              F5P8PeEsVtvQ3RKO72+13bgXfEH+8c6mcRSfiR3XrVWlCv6o/WTzNPQYtK7gz/Pd
-              pFSb+4LGXb7unvec/j+YlnI2l1BFfPRWKsfCbUfi9HeqwmyvuB+hKRj0GThbjIHk
-              aJXNlPbBrZgbygKHblMehhC4l6l1jN6UFL0W5wIDAQABAoIBAEk2M3zcBE0Kf/Pj
-              YtRTxKMvBo5g4+vdwgfYxHpCjkwQLBse8SYpqwxmFGAGHiZn+/c2pC2xRcAbNRtg
-              3JplrPlVmV0Z3UMW35rItgCkufNP+lWBRTpmknjbslYNrZRYCRf6IVUdRA/na61l
-              q6gvrk/L54490MyI3fjXl/oCNu4Z8CdUSyXpYpfR4yJhdy/Breu1IQNePurVuqRI
-              so4hhxMor6Er3MuCnyT1sGE6RI9ogGF58z10cAC0srK5/2kUHOPj2bfRJ4OuaCn9
-              pK2NkO4Rn4NWffnHbHrXpnhM/54+hT68pHzSikBQGwlIyW3ENEQB7UjbbP3w5wZh
-              18FuGaECgYEA5YyYhMs3iJ4qI9BidSC83CB89ZQgMLoSM4v4PlHkoavJ29Mw8Ot0
-              88rzXSgSVbDpFm3sh3gj0oljf8D2/SJtYlRi7+4/iTIVEmE7B96QxAzwELXY/OkT
-              6ESv9YHqYgM0nIsmvwtpRXE/Ux1DLWq8s4JgkCie0i3lLCZB765h5M8CgYEAk4f7
-              O8OZImAzvpiYYAEafyzUJExditp9kLAUf6Xe+Cu7YWf5UwVw312Tzw9OKagxPuZB
-              EULD0AB3bCp9eoU5kYy02n12LBysfAQ1Fl/ZVAlz+ONtnZIpi0HGI1TxnegfFDeB
-              1Ima3ykptVVXPb6WxU9MB9EJ5+2WAaqlhTjRYmkCgYBbqpCBfxF3KgoT8TRQJ7mj
-              ggnEm9la/AMmuH9yi4tskEh001pY6v3yGRqkGctwkswR2+W3l19exOSJ8Mnw/h2G
-              RcKYo6CVrf1CMLe9BcDzuWLomWXEYWNEvqExviaV60fIN71KT0lDpNyv2SCpc1VV
-              rfvXtZDux8sbnU95Yj7PewKBgFCuoD4J9XhwRjwo9cQjNltwp8AGJ24lmWAEe+Fn
-              VC5CtGJL23WE1zrA0XH+u89aVTxB7jnDWpUpfCYigqb7rwUjf1CyJmtvbwEPx/yp
-              hJBJ7yuhLTRsV935paNy9ARYio6i4JTcgF8lAtNRjbmNvqS/fiQUNSeqrkvRCF54
-              OUJpAoGAbNUH3TIW38bo0IG9adRAM/x4csqjXVvpLCdcjOkL3TjMFBXoJPMWlrjx
-              TNPCfUf7DQLRbN7untvvteQmdXTZyP8ddly7GWpEjeZRtblesmnigjZui5nV8Q8Z
-              yM5wNzbbv7/ExP8Wum5vOq4oTsgAMsbIYEz3xbbD0D+MfBL1syk="
-        envs: GITHUB_SHA
-        script: |
-          docker pull sotalvaroo/oldwave-fastapi-backend
-          docker run -d --name oldwave-fastapi-backend -p 80:80 sotalvaroo/oldwave-fastapi-backend 
+
+  Deploy:
+      needs: build
+      runs-on: ubuntu-latest
+      
+      steps:
+        - uses: actions/checkout@v2 
+        - name: Deploy in EC2
+          env:
+              PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+              HOSTNAME : ec2-3-84-235-83.compute-1.amazonaws.com
+              USER_NAME : ubuntu
+              
+          run: |
+            echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+            ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            
+              #Now we have got the access of EC2 and we will start the deploy .
+              cd /home/ubuntu/CounterApp &&
+              git checkout master &&
+              git fetch --all &&
+              git reset --hard origin/master &&
+              git pull origin master &&
+              docker-compose -f docker-compose.prod.yml up -d --build 
 
     # - name: Deploy to Heroku
     #   uses: akhileshns/heroku-deploy@v3.12.12
