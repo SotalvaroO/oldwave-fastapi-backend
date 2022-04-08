@@ -6,7 +6,8 @@ name: Python application
 on:
   push:
     branches: 
-    - feature/CI-CD
+    - dev
+    - master
 
 jobs:
   build:
@@ -56,7 +57,7 @@ jobs:
               PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
               HOSTNAME : ec2-3-84-235-83.compute-1.amazonaws.com
               USER_NAME : ubuntu
-          if: github.ref == 'refs/heads/feature/CI-CD'
+          if: github.ref == 'refs/heads/master'
           run: |
             echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
             ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
