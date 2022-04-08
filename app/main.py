@@ -19,5 +19,5 @@ app.add_middleware(
 
 @app.get('/')
 async def home():
-    res = RedirectResponse(url='/docs')
+    res = RedirectResponse(url='/')
     return res
