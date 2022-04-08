@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 from app.src.routes.product_routes import route
 from fastapi.middleware.cors import CORSMiddleware
-
+import config
 
 app = FastAPI()
 app.include_router(route,prefix='/api')
@@ -19,5 +19,5 @@ app.add_middleware(
 
 @app.get('/')
 async def home():
-    res = RedirectResponse(url='/')
+    res = RedirectResponse(url='/docs')
     return res

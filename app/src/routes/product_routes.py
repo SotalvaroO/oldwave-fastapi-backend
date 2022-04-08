@@ -5,7 +5,7 @@ from app.src.model.product_entity import ProductDetailEntity, ProductEntity
 from fastapi_pagination import Page, add_pagination, paginate
 
 
-route = APIRouter(prefix='/product', tags=['Product'])
+route = APIRouter(prefix='/product', tags=['Product1'])
 
 @route.get('/', response_model=Page[ProductEntity])
 def get_products_by_name(name: str = ""):
