@@ -7,9 +7,7 @@ on:
   push:
     branches: 
     - dev
-  pull_request:
-    branches:
-    - dev
+    - master
 
 jobs:
   build:
@@ -48,11 +46,33 @@ jobs:
         buildArgs: MONGO_URL=${{ secrets.MONGO_URL }}
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Deploy to Heroku
-      uses: akhileshns/heroku-deploy@v3.12.12
-      with:
-        heroku_api_key:  ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: "oldwave-fastapi-backend"
-        heroku_email: "santiago.otalvaroo@udea.edu.co"
-        #healthcheck: "https://oldwave-fastapi-backend.herokuapp.com/healthcheck"
-        rollbackonhealthcheckfailed: true
+  Deploy:
+      needs: build
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v2 
+        - name: Deploy in EC2
+          env:
+              PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+              HOSTNAME : ec2-3-84-235-83.compute-1.amazonaws.com
+              USER_NAME : ubuntu
+          if: github.ref == 'refs/heads/master'
+          run: |
+            echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+            ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            
+              #Now we have got the access of EC2 and we will start the deploy .
+              sudo docker pull sotalvaroo/oldwave-fastapi-backend
+              sudo docker rm -f oldwave-fastapi
+              sudo docker run -d --name oldwave-fastapi -p 80:80 sotalvaroo/oldwave-fastapi-backend
+            '
+        - name: Deploy to Heroku
+          if: github.ref == 'refs/heads/dev'
+          uses: akhileshns/heroku-deploy@v3.12.12
+          with:
+           heroku_api_key:  ${{ secrets.HEROKU_API_KEY }}
+           heroku_app_name: "oldwave-fastapi-backend"
+           heroku_email: "santiago.otalvaroo@udea.edu.co"
+
+           rollbackonhealthcheckfailed: true
