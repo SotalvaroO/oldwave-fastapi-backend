@@ -54,13 +54,12 @@ jobs:
 
       steps:
         - uses: actions/checkout@v2 
-        if: ${{true}}
         - name: Deploy in EC2
           env:
               PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
               HOSTNAME : ec2-3-84-235-83.compute-1.amazonaws.com
               USER_NAME : ubuntu
-
+          if: "false"
           run: |
             echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
             ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
@@ -70,7 +69,6 @@ jobs:
               sudo docker rm -f oldwave-fastapi
               sudo docker run -d --name oldwave-fastapi -p 80:80 sotalvaroo/oldwave-fastapi-backend
             '
-
         - name: Deploy to Heroku
           uses: akhileshns/heroku-deploy@v3.12.12
           with:
