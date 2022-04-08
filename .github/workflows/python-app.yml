@@ -7,9 +7,6 @@ on:
   push:
     branches: 
     - feature/CI-CD
-  pull_request:
-    branches:
-    - feature/CI-CD
 
 jobs:
   build:
